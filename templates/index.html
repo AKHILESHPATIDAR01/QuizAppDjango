@@ -1,0 +1,242 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+{#    <link rel="stylesheet" href="assets/index.css">#}
+{#    <link rel="stylesheet" href="{% static 'assets/style.css' %}">#}
+    <style>
+        @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@200;400;600&display=swap");
+
+        *{
+            box-sizing: border-box;
+        }
+
+        body{
+            background-color: #b8c6db;
+            background-image: linear-gradient(315deg, #b8c6db, #f5f7fa 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: "Poppins", sans-serif;
+            margin: 0;
+            min-height: 100vh;
+        }
+
+        .quiz-container{
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px 5px rgba(0, 0, 0, 0.1);
+            width: 600px;
+            overflow: hidden;
+            max-width: 100%;
+        }
+
+        .quiz-header{
+            padding: 2rem;
+        }
+
+        h2{
+            padding: 1rem;
+            text-align: center;
+            margin: 0;
+        }
+
+        ul{
+            list-style-type: none;
+            padding: 0;
+        }
+
+        ul li{
+            font-size: 1.2rem;
+            margin: 1rem 0;
+        }
+
+
+        button{
+            background-color: #8e44ad;
+            color: white;
+            border: none;
+            display: block;
+            font-family: inherit;
+            font-size: 1.3rem;
+            width: 100%;
+            padding: 2rem;
+            cursor: pointer;
+        }
+
+        button:hover{
+            background-color: #882bb1;
+        }
+
+        button:focus {
+            background-color: #5e3370;
+            outline: none;
+        }
+    </style>
+
+</head>
+<body>
+    
+
+    <div class="quiz-container" id="quiz">
+        <div class="quiz-header">
+            <h2 id="question">Question Text</h2>
+            <ul>
+                <li>
+                    <input type="radio" id="a" name="answer" class="answer">
+                    <label id="a_text" for="a">Question</label>
+                </li>
+                <li>
+                    <input type="radio" id="b" name="answer" class="answer">
+                    <label id="b_text" for="b">Question</label>
+                </li>
+                <li>
+                    <input type="radio" id="c" name="answer" class="answer">
+                    <label id="c_text" for="c">Question</label>
+                </li>
+                <li>
+                    <input type="radio" id="d" name="answer" class="answer">
+                    <label id="d_text" for="d">Question</label>
+                </li>
+            </ul>
+        </div>
+        <button id="submit">Submit</button>
+    </div>
+
+    <div class="allQuestion" id="allQ">
+        
+    </div>
+    
+{#    <script src="assets/script.js"></script>#}
+{#    <script src="{% static 'assets/script.js' %}"></script>#}
+    <script>
+        const quizData = [
+    {
+        question: "What is the most used programming language in 2019 ?",
+        a: "Java",
+        b: "C",
+        c: "Python",
+        d: "JavaScript",
+        correct: "d",
+    },
+
+    {
+        question: "What does HTML stands for ?",
+        a: "HyperText Markup Language",
+        b: "Cascading Style Sheet",
+        c: "Json Object Notation",
+        d: "Helicopters terminals Motorboats Lamborginis",
+        correct: "a",
+    },
+    {
+        question: "What year was JavaScript launched ?",
+        a: "1996",
+        b: "1995",
+        c: "1994",
+        d: "none of the above",
+        correct: "b",
+    },
+    {
+        question: "Which type of JavaScript language is ___?",
+        a: "Object-Oriented",
+        b: "Object-Based",
+        c: "Assembly-language",
+        d: "High-level",
+        correct: "b",
+    },
+    {
+        question: "Which one of the following also known as Conditional Expression:",
+        a: "Alternative to if-else",
+        b: "Switch statement",
+        c: "If-then-else statement",
+        d: "immediate if",
+        correct: "d",
+    },
+]
+
+const answerEls = document.querySelectorAll(".answer");
+const quiz = document.getElementById("quiz");
+const questionE1 = document.getElementById("question");
+const a_text = document.getElementById('a_text');
+const b_text = document.getElementById('b_text');
+const c_text = document.getElementById('c_text');
+const d_text = document.getElementById('d_text');
+const submitBtn = document.getElementById("submit");
+
+const showTotalQuestion = document.getElementById("allQ");
+
+let currentQuiz = 0;
+let score = 0;
+
+
+
+loadQuiz();
+
+function loadQuiz() {
+    deselectAnswer();
+    const currentQuizData = quizData[currentQuiz];
+
+    questionE1.innerText = currentQuizData.question;
+    a_text.innerText = currentQuizData.a;
+    b_text.innerText = currentQuizData.b;
+    c_text.innerText = currentQuizData.c;
+    d_text.innerText = currentQuizData.d;
+
+}
+
+
+function getSelected(){
+
+
+    let answer = undefined;
+
+    answerEls.forEach((answerEls) => {
+        if(answerEls.checked){
+            answer = answerEls.id;
+        }
+    });
+
+    return answer;
+
+
+
+}
+
+function deselectAnswer(){
+    answerEls.forEach((answerEls) => {
+        answerEls.checked = false;
+    }
+)};
+
+
+submitBtn.addEventListener("click" , () =>{
+
+
+    const answer = getSelected();
+    console.log(answer);
+    if(answer){
+
+        if(answer === quizData[currentQuiz].correct){
+            score++;
+        }
+
+        currentQuiz++;
+
+        if(currentQuiz < quizData.length){
+             loadQuiz();
+        }
+        else{
+           quiz.innerHTML = `<h2> You answered correctly at ${score}/${quizData.length} questions </h2>
+           <button onclick="location.reload()">Reload</button>
+           `
+        }
+    }
+
+})
+    </script>
+
+</body>
+</html>
